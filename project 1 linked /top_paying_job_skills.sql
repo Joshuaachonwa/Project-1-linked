@@ -1,0 +1,2723 @@
+/*this to get the skills in relation to the initial query of top paying jobs*/
+
+
+
+WITH top_jobs AS (
+  SELECT
+    c.name AS company_name,
+    j.job_id,
+    j.job_title,
+    CASE 
+      WHEN LOWER(j.job_location) = 'anywhere' THEN 'Remote'
+      ELSE j.job_location
+    END AS job_location,
+    j.job_schedule_type,
+    j.salary_year_avg,
+    j.job_posted_date
+  FROM job_postings_fact j
+  JOIN company_dim c
+    ON j.company_id = c.company_id
+  WHERE
+    j.salary_year_avg IS NOT NULL
+    AND LOWER(j.job_location) IN ('anywhere', 'united kingdom', 'united states', 'canada')
+    AND (
+      LOWER(j.job_title) LIKE '%analyst%'
+      OR LOWER(j.job_title) LIKE '%engineer%'
+    )
+  ORDER BY j.salary_year_avg DESC
+  LIMIT 50
+)
+
+SELECT 
+  tj.*,
+  sd.skills
+FROM top_jobs tj
+INNER JOIN skills_job_dim sjd
+  ON tj.job_id = sjd.job_id
+INNER JOIN skills_dim sd
+  ON sjd.skill_id = sd.skill_id;
+
+/* Results : 
+
+[
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "python"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "java"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "bash"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "unix"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 661070,
+    "job_title": "Senior Data Engineer (ETL Pipelines)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "350000.0",
+    "job_posted_date": "2023-05-29 22:25:01",
+    "skills": "jira"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "python"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "java"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "gcp"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Storm5",
+    "job_id": 1352714,
+    "job_title": "Principal Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-11-24 14:25:28",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "python"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "pandas"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "numpy"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "pyspark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 21321,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-01-27 18:10:51",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "python"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "java"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "bash"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "unix"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 220,
+    "job_title": "Senior Data Engineer (Kafka)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-15 18:40:02",
+    "skills": "jira"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "python"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "pandas"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "numpy"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "pyspark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 157003,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-17 18:11:49",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "python"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "java"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "bash"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "unix"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Engtal",
+    "job_id": 66116,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-05-07 19:13:02",
+    "skills": "jira"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "python"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "scala"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "excel"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "terraform"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "chef"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 1480102,
+    "job_title": "Senior Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "325000.0",
+    "job_posted_date": "2023-02-21 22:37:17",
+    "skills": "ansible"
+  },
+  {
+    "company_name": "orbit",
+    "job_id": 901491,
+    "job_title": "Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "300000.0",
+    "job_posted_date": "2023-11-24 18:02:30",
+    "skills": "python"
+  },
+  {
+    "company_name": "orbit",
+    "job_id": 901491,
+    "job_title": "Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "300000.0",
+    "job_posted_date": "2023-11-24 18:02:30",
+    "skills": "typescript"
+  },
+  {
+    "company_name": "orbit",
+    "job_id": 901491,
+    "job_title": "Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "300000.0",
+    "job_posted_date": "2023-11-24 18:02:30",
+    "skills": "golang"
+  },
+  {
+    "company_name": "Durlston Partners",
+    "job_id": 270455,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "300000.0",
+    "job_posted_date": "2023-07-17 11:10:55",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Durlston Partners",
+    "job_id": 270455,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "300000.0",
+    "job_posted_date": "2023-07-17 11:10:55",
+    "skills": "python"
+  },
+  {
+    "company_name": "Altos Labs",
+    "job_id": 11158,
+    "job_title": "Principal Data Engineer, Knowledge Graphs and Data Semantics",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "269500.0",
+    "job_posted_date": "2023-01-10 08:20:54",
+    "skills": "python"
+  },
+  {
+    "company_name": "Altos Labs",
+    "job_id": 11158,
+    "job_title": "Principal Data Engineer, Knowledge Graphs and Data Semantics",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "269500.0",
+    "job_posted_date": "2023-01-10 08:20:54",
+    "skills": "java"
+  },
+  {
+    "company_name": "Altos Labs",
+    "job_id": 11158,
+    "job_title": "Principal Data Engineer, Knowledge Graphs and Data Semantics",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "269500.0",
+    "job_posted_date": "2023-01-10 08:20:54",
+    "skills": "r"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "tensorflow"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "keras"
+  },
+  {
+    "company_name": "Twitch",
+    "job_id": 230458,
+    "job_title": "Director of Engineering - Data Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "251000.0",
+    "job_posted_date": "2023-01-30 11:07:32",
+    "skills": "pytorch"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 595768,
+    "job_title": "Principal Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-02-14 15:24:07",
+    "skills": "python"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 595768,
+    "job_title": "Principal Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-02-14 15:24:07",
+    "skills": "scala"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 595768,
+    "job_title": "Principal Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-02-14 15:24:07",
+    "skills": "databricks"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 595768,
+    "job_title": "Principal Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-02-14 15:24:07",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 543728,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-28 13:11:42",
+    "skills": "python"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 543728,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-28 13:11:42",
+    "skills": "scala"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 543728,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-28 13:11:42",
+    "skills": "databricks"
+  },
+  {
+    "company_name": "Signify Technology",
+    "job_id": 543728,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-28 13:11:42",
+    "skills": "spark"
+  },
+  {
+    "company_name": "AI Startup",
+    "job_id": 561728,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-24 23:32:42",
+    "skills": "python"
+  },
+  {
+    "company_name": "AI Startup",
+    "job_id": 561728,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-24 23:32:42",
+    "skills": "scala"
+  },
+  {
+    "company_name": "AI Startup",
+    "job_id": 561728,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-24 23:32:42",
+    "skills": "r"
+  },
+  {
+    "company_name": "AI Startup",
+    "job_id": 561728,
+    "job_title": "Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "250000.0",
+    "job_posted_date": "2023-03-24 23:32:42",
+    "skills": "azure"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 367792,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "249000.0",
+    "job_posted_date": "2023-12-21 22:37:50",
+    "skills": "python"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 367792,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "249000.0",
+    "job_posted_date": "2023-12-21 22:37:50",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 367792,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "249000.0",
+    "job_posted_date": "2023-12-21 22:37:50",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "Handshake",
+    "job_id": 204320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "245000.0",
+    "job_posted_date": "2023-01-08 15:05:16",
+    "skills": "go"
+  },
+  {
+    "company_name": "Movable Ink",
+    "job_id": 151972,
+    "job_title": "Principal Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "245000.0",
+    "job_posted_date": "2023-05-25 15:05:38",
+    "skills": "nosql"
+  },
+  {
+    "company_name": "Movable Ink",
+    "job_id": 151972,
+    "job_title": "Principal Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "245000.0",
+    "job_posted_date": "2023-05-25 15:05:38",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Movable Ink",
+    "job_id": 151972,
+    "job_title": "Principal Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "245000.0",
+    "job_posted_date": "2023-05-25 15:05:38",
+    "skills": "gcp"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 2446,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-12 15:56:17",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 2446,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-12 15:56:17",
+    "skills": "python"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 2446,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-12 15:56:17",
+    "skills": "java"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 2446,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-12 15:56:17",
+    "skills": "perl"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 609418,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-08 14:04:41",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 609418,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-08 14:04:41",
+    "skills": "python"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 609418,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-08 14:04:41",
+    "skills": "java"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 609418,
+    "job_title": "Data Engineering Manager",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "242000.0",
+    "job_posted_date": "2023-12-08 14:04:41",
+    "skills": "perl"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 141871,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "241500.0",
+    "job_posted_date": "2023-12-26 22:06:30",
+    "skills": "python"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 141871,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "241500.0",
+    "job_posted_date": "2023-12-26 22:06:30",
+    "skills": "java"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 141871,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "241500.0",
+    "job_posted_date": "2023-12-26 22:06:30",
+    "skills": "r"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 141871,
+    "job_title": "Senior Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "241500.0",
+    "job_posted_date": "2023-12-26 22:06:30",
+    "skills": "aws"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 131527,
+    "job_title": "Senior Data Analyst",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-19 23:04:39",
+    "skills": "python"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 131527,
+    "job_title": "Senior Data Analyst",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-19 23:04:39",
+    "skills": "java"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 131527,
+    "job_title": "Senior Data Analyst",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-19 23:04:39",
+    "skills": "r"
+  },
+  {
+    "company_name": "GradBay",
+    "job_id": 131527,
+    "job_title": "Senior Data Analyst",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-19 23:04:39",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Acceler8 Talent",
+    "job_id": 67310,
+    "job_title": "Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-03-27 14:29:37",
+    "skills": "tensorflow"
+  },
+  {
+    "company_name": "Acceler8 Talent",
+    "job_id": 67310,
+    "job_title": "Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-03-27 14:29:37",
+    "skills": "pytorch"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 125352,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-04 20:27:31",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 125352,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "240000.0",
+    "job_posted_date": "2023-12-04 20:27:31",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "python"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "nosql"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "java"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "shell"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "javascript"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "cassandra"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "azure"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Capital One",
+    "job_id": 9791,
+    "job_title": "Senior Lead Data Engineer (Remote-Eligible)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time and Part-time",
+    "salary_year_avg": "236500.0",
+    "job_posted_date": "2023-10-13 23:28:50",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "python"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "bigquery"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "redshift"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Rocket Lawyer",
+    "job_id": 71033,
+    "job_title": "Principal Data Engineering Architect",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-12-08 13:04:24",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "sql"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "python"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "scala"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "r"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "golang"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "aws"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "redshift"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "spark"
+  },
+  {
+    "company_name": "LTK",
+    "job_id": 456144,
+    "job_title": "Data Engineering Manager - Event Streaming and Real-Time Analytics",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "235000.0",
+    "job_posted_date": "2023-01-09 18:22:32",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "python"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "bigquery"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "redshift"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "gcp"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "looker"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "terraform"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Hinge",
+    "job_id": 14251,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "234500.0",
+    "job_posted_date": "2023-12-19 13:11:19",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 11602,
+    "job_title": "Data Engineer, Analytics (Generalist)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "233000.0",
+    "job_posted_date": "2023-09-09 10:33:46",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Meta",
+    "job_id": 11602,
+    "job_title": "Data Engineer, Analytics (Generalist)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "233000.0",
+    "job_posted_date": "2023-09-09 10:33:46",
+    "skills": "python"
+  },
+  {
+    "company_name": "Pinterest Job Advertisements",
+    "job_id": 99305,
+    "job_title": "Data Analyst, Marketing",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "232423.0",
+    "job_posted_date": "2023-12-05 20:00:40",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Pinterest Job Advertisements",
+    "job_id": 99305,
+    "job_title": "Data Analyst, Marketing",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "232423.0",
+    "job_posted_date": "2023-12-05 20:00:40",
+    "skills": "python"
+  },
+  {
+    "company_name": "Pinterest Job Advertisements",
+    "job_id": 99305,
+    "job_title": "Data Analyst, Marketing",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "232423.0",
+    "job_posted_date": "2023-12-05 20:00:40",
+    "skills": "r"
+  },
+  {
+    "company_name": "Pinterest Job Advertisements",
+    "job_id": 99305,
+    "job_title": "Data Analyst, Marketing",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "232423.0",
+    "job_posted_date": "2023-12-05 20:00:40",
+    "skills": "hadoop"
+  },
+  {
+    "company_name": "Pinterest Job Advertisements",
+    "job_id": 99305,
+    "job_title": "Data Analyst, Marketing",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "232423.0",
+    "job_posted_date": "2023-12-05 20:00:40",
+    "skills": "tableau"
+  },
+  {
+    "company_name": "Snowflake",
+    "job_id": 499503,
+    "job_title": "Industry Senior Principal Sales Engineer, Data Science",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "230625.0",
+    "job_posted_date": "2023-06-10 09:49:03",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "python"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "nosql"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "java"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "go"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "cassandra"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "azure"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "gdpr"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "splunk"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "terraform"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Henry Schein One",
+    "job_id": 173752,
+    "job_title": "Data Engineering Leader",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "227630.0",
+    "job_posted_date": "2023-09-20 23:06:47",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Bruin",
+    "job_id": 584842,
+    "job_title": "Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-02-06 09:09:40",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Bruin",
+    "job_id": 584842,
+    "job_title": "Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-02-06 09:09:40",
+    "skills": "python"
+  },
+  {
+    "company_name": "Bruin",
+    "job_id": 584842,
+    "job_title": "Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-02-06 09:09:40",
+    "skills": "c++"
+  },
+  {
+    "company_name": "Bruin",
+    "job_id": 584842,
+    "job_title": "Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-02-06 09:09:40",
+    "skills": "pandas"
+  },
+  {
+    "company_name": "Cybernetic Search",
+    "job_id": 236847,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-25 18:00:59",
+    "skills": "python"
+  },
+  {
+    "company_name": "Cybernetic Search",
+    "job_id": 236847,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-25 18:00:59",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "Cybernetic Search",
+    "job_id": 236847,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-25 18:00:59",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "Cybernetic Search",
+    "job_id": 236847,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-25 18:00:59",
+    "skills": "azure"
+  },
+  {
+    "company_name": "Cybernetic Search",
+    "job_id": 236847,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-25 18:00:59",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "python"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "javascript"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "typescript"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "azure"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Datavant",
+    "job_id": 562251,
+    "job_title": "Senior Software Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-11-07 17:33:33",
+    "skills": "react"
+  },
+  {
+    "company_name": "Understanding Recruitment",
+    "job_id": 202624,
+    "job_title": "Rust Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-09-05 09:02:44",
+    "skills": "rust"
+  },
+  {
+    "company_name": "Acceler8 Talent",
+    "job_id": 801317,
+    "job_title": "Sr. Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-01-06 14:33:20",
+    "skills": "tensorflow"
+  },
+  {
+    "company_name": "Acceler8 Talent",
+    "job_id": 801317,
+    "job_title": "Sr. Machine Learning Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "225000.0",
+    "job_posted_date": "2023-01-06 14:33:20",
+    "skills": "pytorch"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 1260479,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "224000.0",
+    "job_posted_date": "2023-12-12 00:28:47",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 1260479,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "224000.0",
+    "job_posted_date": "2023-12-12 00:28:47",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 1622062,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "224000.0",
+    "job_posted_date": "2023-12-18 22:09:37",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 1622062,
+    "job_title": "Senior Staff Engineer, Insights and Telemetry (InTel)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "224000.0",
+    "job_posted_date": "2023-12-18 22:09:37",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 303478,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "222000.0",
+    "job_posted_date": "2023-12-04 20:13:08",
+    "skills": "python"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 303478,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "222000.0",
+    "job_posted_date": "2023-12-04 20:13:08",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "MongoDB",
+    "job_id": 303478,
+    "job_title": "Director of Engineering, ML Platform",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "222000.0",
+    "job_posted_date": "2023-12-04 20:13:08",
+    "skills": "mongodb"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "python"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "nosql"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "scala"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "java"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Brightcove",
+    "job_id": 1375618,
+    "job_title": "Director, Data Engineering (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221500.0",
+    "job_posted_date": "2023-08-16 07:23:29",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Guild Education",
+    "job_id": 51653,
+    "job_title": "Staff Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221000.0",
+    "job_posted_date": "2023-01-31 09:06:22",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Guild Education",
+    "job_id": 51653,
+    "job_title": "Staff Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221000.0",
+    "job_posted_date": "2023-01-31 09:06:22",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "Guild Education",
+    "job_id": 51653,
+    "job_title": "Staff Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221000.0",
+    "job_posted_date": "2023-01-31 09:06:22",
+    "skills": "gdpr"
+  },
+  {
+    "company_name": "Guild Education",
+    "job_id": 51653,
+    "job_title": "Staff Data Engineer",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "221000.0",
+    "job_posted_date": "2023-01-31 09:06:22",
+    "skills": "looker"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "sql"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "python"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "scala"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "java"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "aws"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "spark"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "BrightHire Search Partners Inc.",
+    "job_id": 230799,
+    "job_title": "Senior Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-10-17 16:07:30",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "MosaicML",
+    "job_id": 4635,
+    "job_title": "Research Scientist / Research Engineer (Greater NYC Area, NY)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-05-15 07:20:31",
+    "skills": "go"
+  },
+  {
+    "company_name": "MosaicML",
+    "job_id": 4635,
+    "job_title": "Research Scientist / Research Engineer (Greater NYC Area, NY)",
+    "job_location": "United States",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-05-15 07:20:31",
+    "skills": "pytorch"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 67320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-02-10 20:24:11",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 67320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-02-10 20:24:11",
+    "skills": "python"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 67320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-02-10 20:24:11",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 67320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-02-10 20:24:11",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Harnham",
+    "job_id": 67320,
+    "job_title": "Staff Data Engineer",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-02-10 20:24:11",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "python"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "nosql"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "java"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "r"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "bash"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "dynamodb"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "azure"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "gcp"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "spark"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "pandas"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "pyspark"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "kafka"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "express"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "git"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "kubernetes"
+  },
+  {
+    "company_name": "Grindr",
+    "job_id": 503833,
+    "job_title": "Principal AI Data Engineer (Remote)",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-11-06 19:13:01",
+    "skills": "docker"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "sql"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "python"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "aws"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "redshift"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "snowflake"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "airflow"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "github"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "jira"
+  },
+  {
+    "company_name": "Get It Recruit - Information Technology",
+    "job_id": 633388,
+    "job_title": "Senior Manager of Data Engineering",
+    "job_location": "Remote",
+    "job_schedule_type": "Full-time",
+    "salary_year_avg": "220000.0",
+    "job_posted_date": "2023-08-12 08:56:09",
+    "skills": "confluence"
+  }
+  */
