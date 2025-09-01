@@ -54,7 +54,7 @@ The schema consists of four main tables:
 
 This structure enables flexible joins between companies, job postings, and required skills for richer analysis.
 
-![Entity Relationship Diagram](assets/6a441727-bbb5-4837-b917-0fc963cb45d4.png)
+![Entity Relationship Diagram](project_1_linked/assets/6a441727-bbb5-4837-b917-0fc963cb45d4.png)
 
 📊 **Why this schema works well for analysis:**
 - **Fact Table (job_postings_fact):** Holds the key quantitative information — salaries, job type, dates, location.  
@@ -63,14 +63,18 @@ This structure enables flexible joins between companies, job postings, and requi
 - **Scalability:** Easy to join and extend (e.g., adding new dimensions like industries, education requirements).  
 - **Analytical Clarity:** The design cleanly separates *measures* (salary, postings) from *descriptions* (company, skill type), enabling powerful aggregations with simple SQL queries.  
 
-💡 **Critical Insight:**  
-This schema balances normalization (for data integrity) with a dimensional design (for analytical speed). It mirrors best practices in analytics databases, making it straightforward to query, filter, and visualize insights such as salary trends, skill demand, and location differences.
+**💡 Critical Insight:**  
+<small>
+This schema balances normalization (for data integrity) with a dimensional design (for analytical speed). 
+It mirrors best practices in analytics databases, making it straightforward to query, filter, and visualize 
+insights such as salary trends, skill demand, and location differences.
+</small>
 ---
 
 ## Findings
 
 ### 1. Salary Distribution by Location
-![Salary distribution by location](PATH/TO/salary_box_by_location.png)
+![Salary distribution by location](project_1_linked/assets/salary_box_by_location.png)
 
 📊 **Key Findings**
 - **US**: Median salary ~ **$249k**, max ~ **$375k**.  
@@ -82,40 +86,39 @@ This schema balances normalization (for data integrity) with a dimensional desig
 ---
 
 ### 2. Role Mix (Analyst vs Engineer)
-![Role mix by location](PATH/TO/role_mix_by_location.png)
+![Role mix by location](project_1_linked/assets/role_mix_by_location.png)
 
 📊 **Key Findings**
 - **47 Engineering vs 3 Analyst roles** in Top-50.  
 - Median pay roughly similar (~$240k), but Analyst average inflated by one extreme posting.  
 
-💡 **Insight**: Engineering roles remain the backbone of high-paying opportunities; Analyst roles can reach high salaries but far less consistently.
+💡 **Insight**: Engineering positions remain the core of high-paying opportunities; although analyst roles can reach higher salaries, such cases are significantly less common.
 
 ---
 
 ### 3. Remote Skills — Demand vs Salary
-![Remote skills: demand vs salary](PATH/TO/remote_skills_demand_vs_salary.png)
+![Remote skills: demand vs salary](project_1_linked/assets/remote_skills_demand_vs_salary.png)
 
 📊 **Key Findings**
 - **High-demand, moderate pay**: SQL (~1.3k postings, ~$120k), Python (~1.1k postings, ~$128k).  
 - **Lower-demand, higher pay**: Spark, Airflow, Snowflake, AWS (~$135k–$145k, <400 postings).  
 
-💡 **Insight**: Generalist skills provide job security, while niche platforms reward specialization with higher salaries.
+💡 **Insight**: Versatile skills offer job security, while niche platforms tend to favour specialists with higher salaries.
 
 ---
 
 ### 4. Most Repeated Postings
-![Most repeated postings](PATH/TO/most_repeated_postings.png)
+![Most repeated postings](project_1_linked/assets/most_repeated_postings.png)
 
-📊 **Key Findings**
-- Aggregators (e.g., Listopro) inflate posting counts with templated ads.  
-- Popular postings are not always unique opportunities.  
+📊 **Key Findings**  
+Aggregators such as Listopro tend to inflate posting counts through the use of templated advertisements. Additionally, popular postings do not necessarily represent unique opportunities.  
 
-💡 **Insight**: Treat posting counts as **indicative signals of demand**, not absolute job availability.
+💡 **Insight**:  Treat posting counts as signals of demand rather than definitive indicators of job availability.
 
 ---
 
-### 5. Company Presence in Top-50
-![Top companies in Top-50](PATH/TO/top_companies_in_top50.png)
+### 5. Top 10 Companies' Presence with Different Roles in the Top-50
+![Top companies in Top-50](project_1_linked/assets/top_companies_in_top50.png)
 
 📊 **Key Findings**
 - Certain companies (e.g., Engtal, Harnham) appear multiple times in the Top-50.  
@@ -125,9 +128,9 @@ This schema balances normalization (for data integrity) with a dimensional desig
 
 ---
 
-### 6. Top Paying Skills (US & Remote)
-![US top paying skills](PATH/TO/top_paying_skills_united_states.png)  
-![Remote top paying skills](PATH/TO/top_paying_skills_anywhere.png)
+### 6. Top Paying Skills
+![US top paying skills](project_1_linked/assets/top_paying_skills_united_states.png)  
+![Remote top paying skills](project_1_linked/assets/top_paying_skills_anywhere.png)
 
 📊 **Key Findings**
 - **US:** Kubernetes (~$207k, 14 jobs), Jira (~$205k, 7 jobs). Some inflated one-off skills (Next.js, Django) appear due to **n=1 postings**.  
@@ -138,7 +141,7 @@ This schema balances normalization (for data integrity) with a dimensional desig
 ---
 
 ### 7. Skills Frequency in High-Pay Jobs
-![Skills frequency in Top-50](PATH/TO/skills_frequency_top50.png)
+![Skills frequency in Top-50](project_1_linked/assets/skills_frequency_top50.png)
 
 📊 **Key Findings**
 - **SQL, Python, AWS** dominate frequency in high-paying jobs.  
@@ -149,16 +152,16 @@ This schema balances normalization (for data integrity) with a dimensional desig
 ---
 
 ## Insights & Recommendations
-- **Broaden skill filters** to include *scientist*, *architect*, and *manager* roles for a fuller market picture.  
-- **Normalize location labels** (UK vs United Kingdom, city-level tags) to improve accuracy.  
-- **Salary caution**: Outliers and single-posting averages distort true market medians.  
-- **Career strategy**: Anchor in **SQL + Python** while layering **cloud (AWS/Azure)** and **workflow tools (Airflow, Spark)** for higher-paying specialist roles.
+- **Broaden skill filters** to include *scientist*, *architect*, and *manager* roles for a more comprehensive market overview.  
+- **Standardise location labels** (UK vs United Kingdom, city-level tags) to enhance accuracy.  
+- **Salary caution**: Outliers and single-posting averages can distort the true market medians.  
+- **Career strategy**: Focus on **SQL + Python** while integrating **cloud (AWS/Azure)** and **workflow tools (Airflow, Spark)** for higher-paying specialist roles.
 
 ---
 
 ## Technical Details
 - **Database**: PostgreSQL  
-- **Code Editor**: VS Code (SQLTools extension)  
+- **Code Editor**: VS Code (SQLTools extension and python)  
 - **Visualization**: Python (Matplotlib)  
 - **SQL Files**: See `/sql` folder (`top_paying_jobs.sql`, `job_posting_count.sql`, etc.)  
 - **Data Sources**: Job postings fact tables with joins to companies and skills.  
