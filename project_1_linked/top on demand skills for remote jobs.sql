@@ -6,7 +6,10 @@ WITH top_paying_jobs AS (
     j.job_id,
     j.job_title,
     j.salary_year_avg,
-    j.job_location
+    CASE 
+      WHEN LOWER(j.job_location) = 'anywhere' THEN 'Remote'
+      ELSE j.job_location
+    END AS job_location
   FROM job_postings_fact j
   WHERE LOWER(j.job_location) = 'anywhere'
     AND j.salary_year_avg IS NOT NULL
